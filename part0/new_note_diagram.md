@@ -5,41 +5,39 @@
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant Browser
-    participant Server
+    participant browser
+    participant server
 
-    User->>Browser: Enters note and clicks "Save"
-    note over Browser: Browser collects form data
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate server
+    server-->>browser: HTTP 302 Redirect to /notes
+    deactivate server
 
-    Browser->>Server: POST /new_note (with form data)
-    activate Server
-    Server-->>Browser: HTTP 302 Redirect to /notes
-    deactivate Server
+    Note right of browser: The server asks the browser to perform a new HTTP GET request
 
-    Browser->>Server: GET /notes
-    activate Server
-    Server-->>Browser: HTML document
-    deactivate Server
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    server-->>browser: HTML document
+    deactivate server
 
-    Browser->>Server: GET /main.css
-    activate Server
-    Server-->>Browser: CSS file
-    deactivate Server
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: the css file
+    deactivate server
 
-    Browser->>Server: GET /main.js
-    activate Server
-    Server-->>Browser: JavaScript file
-    deactivate Server
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server-->>browser: the JavaScript file
+    deactivate server
 
-    note over Browser: Browser executes JavaScript to fetch the latest notes
+    Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
 
-    Browser->>Server: GET /data.json
-    activate Server
-    Server-->>Browser: JSON data (list of notes)
-    deactivate Server
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+    deactivate server
 
-    note over Browser: Browser updates the UI with the new note
+    Note right of browser: The browser executes the callback function that renders the notes
 
 ```
 
