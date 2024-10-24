@@ -15,5 +15,5 @@ sequenceDiagram
     server-->>browser: Status 201 (Created) {content: "new note", date: "2024-10-24T15:23:34.393Z"}
     deactivate server
 
-    Note right of browser: User creates a new note. Browser executes event handler, prevents form submission (no page reload), creates new note object, adds it to notes array, redraws notes on page and sends note to server. Browser stays on the same page and no additional HTTP requests needed.
+    Note right of browser: User creates a new note. Browser executes event handler(no page reload), creates new note object, adds it to notes array, redraws notes on page and sends note to server. Browser stays on the same page and no additional HTTP requests needed.
 
