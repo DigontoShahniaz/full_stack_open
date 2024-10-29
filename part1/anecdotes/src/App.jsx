@@ -1,5 +1,33 @@
 import { useState } from 'react'
 
+
+// best component
+const Best = (props) => {
+  const max = Math.max(...props.votes)
+  const index = props.votes.indexOf(max)
+
+  if (max > 0) {
+    return (
+      <div>
+        <h1>Anecdote with most votes</h1>
+        <p>{props.anecdotes[index]}</p>
+        <p>has {max} votes</p>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <h1>Anecdote with most votes</h1>
+        <p>No votes yet</p>
+      </div>
+    )
+  }
+
+
+}
+
+// app component
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -30,10 +58,13 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote for the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <button onClick={handleVotes}>vote</button>
       <button onClick={handleAnecdotes}>next anecdote</button>
+
+      <Best anecdotes={anecdotes} votes={votes} />
     </div>
   )
 }
