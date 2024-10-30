@@ -1,9 +1,11 @@
 
+// Header Component
 const Header = ({name}) => <h1>{name}</h1>
 
+// Part Component
 const Part = ({parts}) => parts.map((part => <p key={part.id}>{part.name} {part.exercises}</p>))
 
-
+// Content Component
 const Content = ({parts}) => {
   return (
     <div>
@@ -12,7 +14,7 @@ const Content = ({parts}) => {
   )
 }
 
-
+// Course Component
 const Course = ({course}) => {
   return (
     <>
@@ -23,7 +25,7 @@ const Course = ({course}) => {
 }
 
 
-
+// App Component
 const App = () => {
   const course = {
     id: 1,
