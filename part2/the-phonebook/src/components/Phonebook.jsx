@@ -1,15 +1,12 @@
 
-const Phonebook = ({persons, filter}) => {
-  const filteredPersons = persons.filter(person => 
-    person.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
-  )
+const Phonebook = ({person, deletePerson}) => {
 
   return (
     <div>
-      <h2>Numbers</h2>
-      <ul>
-        {filteredPersons.map(person => <li key={person.id}>{person.name} {person.number}</li>)}
-      </ul>
+      <li>
+        {person.name} {person.number}
+        <button onClick={deletePerson}>delete</button>
+      </li>
     </div>
 
   )
