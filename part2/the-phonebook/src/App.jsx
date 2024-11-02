@@ -18,6 +18,7 @@ const App = () => {
       const data = response.data
       setPersons(data)
     })
+    .catch(error => alert(`an error occured`, error))
   }, [])
 
   const handleFilterChange = (event) => {
@@ -57,10 +58,16 @@ const App = () => {
       number: String(newNumber),
       id: String(persons.length + 1)
     }
-    
-    setPersons(persons.concat(numberObject))
-    setNewName('')
-    setNewNumber('')
+
+    axios
+    .post('http://localhost:3001/persons', numberObject)
+    .then(response => {
+    const data = response.data
+      setPersons(persons.concat(data))
+      setNewName('')
+      setNewNumber('')
+    })
+    .catch(error => `An error occured: ${error}`)
   }
 
   
