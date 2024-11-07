@@ -6,18 +6,13 @@ import Filter from './components/Filter'
 import Notification from './components/Notification'
 
 const App = () => {
-  // state variable start
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [message, setMessage] = useState(null)
   const [isError, setIsError] = useState(false)
-  // state variable over
 
-  // crud functions start
-
-  // useEffect to get all the data from the server
   useEffect(() => {
     phonebookServices
     .getAll()
@@ -31,7 +26,6 @@ const App = () => {
     })
   }, [])
 
-  // updatePerson function start
   const updatePerson = (existingPerson, newNumber) => {
     const confirmUpdate = window.confirm(
       `${existingPerson.name} is already in the phonebook. Replace the old number with the new one?`
@@ -58,9 +52,7 @@ const App = () => {
       })
     }
   }
-  // updatePerson function over
-
-  // addPerson function start
+ 
   const addPerson = (event) => {
     event.preventDefault()
   
@@ -97,9 +89,7 @@ const App = () => {
       })
     }
   }
-  // addPerson function over
 
-  // delete function start
   const deletePerson = (id) => {
     const personToDelete = persons.find(person => person.id === id)
       if (personToDelete) {
@@ -117,17 +107,10 @@ const App = () => {
       }
   }
 
-  // delete function over
-  
-  // crud functions over
-
-  // filter function start
   const filteredPersons = persons.filter(person => 
     person.name.toLowerCase().includes(filter.toLowerCase())
   )
-  // fillter function over
 
-  // handler functions start
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -139,7 +122,6 @@ const App = () => {
   const handleFilterChange = (event) => {
     setFilter(event.target.value)
   }
-  // handler function over
 
   return (
     <div>
