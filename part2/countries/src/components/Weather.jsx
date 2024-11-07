@@ -1,7 +1,6 @@
 
 const Weather = ({country, weatherData, icon}) => {
-  console.log(icon)
-
+  
   return (
     <div>
       {weatherData ? 
