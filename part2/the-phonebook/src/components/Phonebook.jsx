@@ -1,16 +1,14 @@
 
-const Phonebook = ({person, deletePerson}) => {
-
+const Phonebook = ({persons, deletePerson}) => {
   return (
-    <div>
+    <>
       <li>
-        {person.name} {person.number}
+        {persons.name} {persons.number}
         <button onClick={deletePerson}>delete</button>
       </li>
-    </div>
+    </>
 
   )
-
 }
 
 export default Phonebook

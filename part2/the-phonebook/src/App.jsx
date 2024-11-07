@@ -1,119 +1,166 @@
-
 import {useState, useEffect} from 'react'
-import axios from 'axios'
+import phonebookServices from './servers/phonebookServices'
 import Phonebook from './components/Phonebook'
 import Form from './components/Form'
 import Filter from './components/Filter'
-import phonebookService from './servers/phonebooks'
+import Notification from './components/Notification'
 
 const App = () => {
+  // state variable start
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
+  // state variable over
 
+  // crud functions start
+
+  // useEffect to get all the data from the server
   useEffect(() => {
-    phonebookService
+    phonebookServices
     .getAll()
-    .then(initalPhonebook => {
-      setPersons(initalPhonebook)
+    .then(returnedList => {
+      setPersons(returnedList)
     })
-    .catch(error => alert(`an error occured`, error))
+    .catch(error => {
+      setIsError(true)
+      setMessage(`Note: An error occurred while getting data from server. Error: ${error}`)
+      setTimeout(() => {setMessage(null)}, 5000)
+    })
   }, [])
 
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value)
-   }
+  // updatePerson function start
+  const updatePerson = (existingPerson, newNumber) => {
+    const confirmUpdate = window.confirm(
+      `${existingPerson.name} is already in the phonebook. Replace the old number with the new one?`
+    )
 
-  const handleNameChange = (event) => {
-    setNewName(event.target.value)
+    if (confirmUpdate) {
+      const updatedPerson = { ...existingPerson, number: newNumber };
+      phonebookServices
+      .updateUser(existingPerson.id, updatedPerson)
+      .then((returnedPerson) => {
+        setPersons(persons.map(person => 
+          person.id !== existingPerson.id ? person : returnedPerson
+        ))
+        setIsError(false)
+        setMessage(`Number changed of ${newName}`)
+        setTimeout(() => {setMessage(null)}, 5000)
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(error => {
+        setIsError(true)
+        setMessage(`Note: An error occurred while updating data. Error: ${error}`)
+        setTimeout(() => {setMessage(null)}, 5000)
+      })
+    }
   }
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value)
-  }
+  // updatePerson function over
 
-  const addNumber = (event) => {
+  // addPerson function start
+  const addPerson = (event) => {
     event.preventDefault()
-    if (newName.length === 0 || newNumber.length === 0) {
-      alert('No name or number')
+  
+    if (!newName || !newNumber) {
+      alert('Please enter both name and number')
       return
     }
 
     const existingPerson = persons.find(person => person.name === newName)
-    if (existingPerson) {
-      const confirmUpdate = window.confirm(`${existingPerson.name} is already in the phonebook. Replace old number with new one?`)
-      if (confirmUpdate) {
-        const updatedPerson = {...existingPerson, number: newNumber}
-        phonebookService
-        .update(existingPerson.id, updatedPerson)
-        .then(returnedPerson => {
-          setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
-          setNewName('')
-          setNewNumber('')
-      })
-      }
-
-      
-    }
-    const duplicateNumber = persons.some(person => person.number === newNumber)
-    if (duplicateNumber) {
-      alert(`${newNumber} is already added to phonebook`)
-      setNewNumber('')
-      return
-    }
-
-    const numberObject = {
-      name: newName,
-      number: String(newNumber),
-      id: String(persons.length + 1)
-    }
-
-    phonebookService
-    .create(numberObject)
-    .then(returendPhonebook => {
-      setPersons(persons.concat(returendPhonebook))
-      setNewName('')
-      setNewNumber('')
-    })
-    .catch(error => `An error occured: ${error}`)
-  }
-
-  const filteredPersons = persons.filter(person => 
-    person.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())
-  )
-
-  const deletePerson = (id) => {
-    phonebookService
-    .deleteUser(id)
-    .then(() => {
-      setPersons(persons.filter(p => p.id !== id))
-    })
-    .catch(error => {
-      alert('Error occured while deleting the user', error)
-    })
-
-  }
-
   
+    if (existingPerson) {
+      updatePerson(existingPerson, newNumber);
+    } else 
+    {
+      const newObject = {
+        name: newName,
+        number: newNumber,
+      }
+    
+      phonebookServices
+      .create(newObject)
+      .then(returnedObject => {
+        setPersons(persons.concat(returnedObject))
+        setIsError(false)
+        setMessage(`Added ${newName}`)
+        setTimeout(() => {setMessage(null)}, 5000)
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(error => {
+        setIsError(true)
+        setMessage(`Note: An error occurred while creating a new contact. Error: ${error}`)
+        setTimeout(() => {setMessage(null)}, 5000)
+      })
+    }
+  }
+  // addPerson function over
+
+  // delete function start
+  const deletePerson = (id) => {
+    const personToDelete = persons.find(person => person.id === id)
+      if (personToDelete) {
+        phonebookServices
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+        .catch(error => {
+          setIsError(true)
+          setMessage(`Information of ${personToDelete.name} has already been removed from server`)
+          setTimeout(() => {setMessage(null)}, 5000)
+        })
+        setPersons(persons.filter(person => person.id !== id))
+      }
+  }
+
+  // delete function over
+  
+  // crud functions over
+
+  // filter function start
+  const filteredPersons = persons.filter(person => 
+    person.name.toLowerCase().includes(filter.toLowerCase())
+  )
+  // fillter function over
+
+  // handler functions start
+  const handleNameChange = (event) => {
+    setNewName(event.target.value)
+  }
+
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+  }
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+  }
+  // handler function over
+
   return (
     <div>
-      <Filter filter={filter} handleFilterChange={handleFilterChange}/>
-      <Form 
-        newName={newName} 
-        newNumber={newNumber} 
-        handleNameChange={handleNameChange}
-        handleNumberChange={handleNumberChange}
-        addNumber={addNumber}
-      />
-      <ul>
-        <h2>Numbers</h2>
-        {filteredPersons.map(person => 
-          <Phonebook key={person.id} person={person} deletePerson={() => deletePerson(person.id)}/>
-        )}
-        
-      </ul>
-      
+      <h1>Phonebook</h1>
+      <Notification message={message} isError={isError} />
 
+
+      <Filter filter={filter} handleFilterChange={handleFilterChange} />
+      
+      <Form 
+        addPerson={addPerson} 
+        newName={newName} 
+        handleNameChange={handleNameChange} 
+        newNumber={newNumber} 
+        handleNumberChange={handleNumberChange} 
+      />
+
+      <h1>Numbers</h1>
+      <ul>
+        {filteredPersons.map(person => <Phonebook key={person.id} persons={person} deletePerson={() => deletePerson(person.id)}/>)}
+      </ul>
     </div>
   )
 }
