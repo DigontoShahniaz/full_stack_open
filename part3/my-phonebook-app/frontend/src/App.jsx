@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import phonebookServices from './servers/phonebookServices'
+import phonebookServices from './servers/phonebookservices'
 import Phonebook from './components/Phonebook'
 import Form from './components/Form'
 import Filter from './components/Filter'
@@ -47,7 +47,7 @@ const App = () => {
       })
       .catch(error => {
         setIsError(true)
-        setMessage(`Note: An error occurred while updating data. Error: ${error}`)
+        setMessage(`${error.response.data.error}`)
         setTimeout(() => {setMessage(null)}, 5000)
       })
     }
@@ -84,7 +84,7 @@ const App = () => {
       })
       .catch(error => {
         setIsError(true)
-        setMessage(`Note: An error occurred while creating a new contact. Error: ${error}`)
+        setMessage(`${error.response.data.error}`)
         setTimeout(() => {setMessage(null)}, 5000)
       })
     }
