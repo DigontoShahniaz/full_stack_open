@@ -1,6 +1,6 @@
 ## Link to the application
 
-### https://the-phonebook.fly.dev/api/persons
+### https://the-phonebook.fly.dev
 
 ## Link to the live server
 
