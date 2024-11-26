@@ -2,8 +2,6 @@
 
 ### My name is Digonto Shahniaz and I am a second year ICT Engineering student at Jamk University of Applied Sciences.
 
-## Link of the phonebook app of part3: https://the-phonebook.fly.dev/
-
 ## part0
 :white_check_mark: Exercise 01
 :white_check_mark: Exercise 02
