@@ -59,15 +59,28 @@ router.delete('/:id', userExtractor, async (request, response) => {
 router.put('/:id', async (request, response) => {
   const body = request.body
 
-  const blog = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes
-  }
+  try {
+    const blog = {
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes,
+      user: body.user
+    }
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-  response.json(updatedBlog)
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+    .populate('user', { username: 1, name: 1 })
+
+    if (!updatedBlog) {
+      return response.status(404).json({ error: 'blog not found' })
+    }
+
+    response.json(updatedBlog)
+  } catch (error) {
+    console.error('Error updating blog:', error.message)
+    response.status(400).json({ error: 'malformatted id or bad request' })
+  }
 })
+
 
 module.exports = router
