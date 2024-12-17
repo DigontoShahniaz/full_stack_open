@@ -4,7 +4,7 @@
 
 ## Link of the phonebook app of part3: https://the-phonebook.fly.dev/
 
-## Link of the blog app of part3: https://mybloglistapp.fly.dev/
+## Link of the blog app of part5: https://mybloglistapp.fly.dev/
 
 ## part0
 :white_check_mark: Exercise 01
