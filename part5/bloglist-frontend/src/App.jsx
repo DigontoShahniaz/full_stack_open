@@ -123,7 +123,7 @@ const App = () => {
     setTimeout(() => {
       setMessage(null)
     }, 5000)
-    window.localStorage.removeItem('loggedBlogappUser')
+    window.localStorage.removeItem('loggedBlogAppUser')
     window.localStorage.clear()
   }
 

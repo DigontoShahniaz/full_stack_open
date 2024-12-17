@@ -25,13 +25,13 @@ const BlogForm = ({ createBlog }) => {
       <h2>Create a new note</h2>
       <form onSubmit={addBlog}>
         <div>
-          Title: <input name="title" value={newBlog.title} onChange={handleChange} />
+          Title <input name="title" value={newBlog.title} onChange={handleChange} placeholder='Enter blog title' />
         </div>
         <div>
-          Author: <input name="author" value={newBlog.author} onChange={handleChange} />
+          Author: <input name="author" value={newBlog.author} onChange={handleChange} placeholder='Enter blog author'/>
         </div>
         <div>
-          URL: <input name="url" value={newBlog.url} onChange={handleChange} />
+          URL: <input name="url" value={newBlog.url} onChange={handleChange} placeholder='Enter blog url' />
         </div>
         <button type="submit">Create</button>
       </form>
