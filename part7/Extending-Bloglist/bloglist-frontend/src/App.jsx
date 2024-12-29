@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
@@ -7,6 +8,8 @@ import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
+import Users from "./components/Users";
+import UserView from "./components/UserView";
 import { setNotification, clearNotification } from "./redux/notificationSlice";
 import { initializeBlogs, createBlog } from "./redux/reducers/blogReducer";
 import { setUser, clearUser } from "./redux/reducers/userReducer";
@@ -70,39 +73,58 @@ const App = () => {
       notify("Failed to add the blog. Please try again.", true);
     }
   };
-  
-  
+
+  if (!user) {
+    return (
+      <div>
+        <Notification message={notification.message} isError={notification.isError} />
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleLogin}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <Notification message={notification.message} isError={notification.isError} />
-      {!user && (
-        <div>
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
+    <Router>
+      <div>
+        <Notification message={notification.message} isError={notification.isError} />
+        <p>
+          {user.name} logged in <button onClick={handleLogout}>logout</button>
+        </p>
+        <nav>
+          <Link to="/blogs">Blogs</Link>
+          {" | "}
+          <Link to="/users">Users</Link>
+        </nav>
+        <Routes>
+          <Route
+            path="/"
+            element={<Navigate replace to="/blogs" />}
           />
-        </div>
-      )}
-      {user && (
-        <div>
-          <p>
-            {user.name} logged in <button onClick={handleLogout}>logout</button>
-          </p>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm createBlog={addBlog} />
-          </Togglable>
-        </div>
-      )}
-
-      <h3>Blogs</h3>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} user={user} />
-      ))}
-    </div>
+          <Route
+            path="/blogs"
+            element={
+              <div>
+                <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                  <BlogForm createBlog={addBlog} />
+                </Togglable>
+                <h3>Blogs</h3>
+                {blogs.map((blog) => (
+                  <Blog key={blog.id} blog={blog} user={user} />
+                ))}
+              </div>
+            }
+          />
+          <Route path="/users" element={<Users />} />
+          <Route path="/users/:id" element={<UserView />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 
