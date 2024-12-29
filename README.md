@@ -6,7 +6,7 @@
 
 ## Link of the blog app of part5: https://mybloglistapp.fly.dev/
 
-## Link of the blog app of part7: https://mybloglistapp.fly.dev/blogs
+## Link of the blog app of part7: https://mybloglistapp.fly.dev/
 
 ## part0
 :white_check_mark: Exercise 01
