@@ -4,7 +4,6 @@ import blogReducer from "./reducers/blogReducer";
 import userReducer from "./reducers/userReducer";
 import usersReducer from "./userSlice";
 
-
 const store = configureStore({
   reducer: {
     notification: notificationReducer,

@@ -1,7 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { initializeUsers } from "../redux/userSlice";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { Table } from "react-bootstrap"; // Import the Table component from react-bootstrap
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const Users = () => {
   return (
     <div>
       <h2>Users</h2>
-      <table>
+      <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>Name</th>
@@ -31,7 +32,7 @@ const Users = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 };

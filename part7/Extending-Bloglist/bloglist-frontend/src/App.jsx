@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from "react-router-dom";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
@@ -10,6 +16,8 @@ import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import Users from "./components/Users";
 import UserView from "./components/UserView";
+import BlogView from "./components/BlogView";
+import Navigation from "./components/Navigation";
 import { setNotification, clearNotification } from "./redux/notificationSlice";
 import { initializeBlogs, createBlog } from "./redux/reducers/blogReducer";
 import { setUser, clearUser } from "./redux/reducers/userReducer";
@@ -37,7 +45,7 @@ const App = () => {
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       blogService.setToken(user.token);
       dispatch(setUser(user));
-      notify("Logged in successfully");
+      notify(`Welcome ${user.name}`);
       setUsername("");
       setPassword("");
     } catch (exception) {
@@ -68,7 +76,9 @@ const App = () => {
     try {
       blogFormRef.current.toggleVisibility();
       await dispatch(createBlog(blogObject));
-      notify(`Blog "${blogObject.title}" by ${blogObject.author} added successfully!`);
+      notify(
+        `Blog "${blogObject.title}" by ${blogObject.author} added successfully!`,
+      );
     } catch (error) {
       notify("Failed to add the blog. Please try again.", true);
     }
@@ -77,7 +87,10 @@ const App = () => {
   if (!user) {
     return (
       <div>
-        <Notification message={notification.message} isError={notification.isError} />
+        <Notification
+          message={notification.message}
+          isError={notification.isError}
+        />
         <LoginForm
           username={username}
           password={password}
@@ -90,41 +103,37 @@ const App = () => {
   }
 
   return (
-    <Router>
-      <div>
-        <Notification message={notification.message} isError={notification.isError} />
-        <p>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </p>
-        <nav>
-          <Link to="/blogs">Blogs</Link>
-          {" | "}
-          <Link to="/users">Users</Link>
-        </nav>
-        <Routes>
-          <Route
-            path="/"
-            element={<Navigate replace to="/blogs" />}
+    <div className="container">
+      <Router>
+        <div>
+          <Notification
+            message={notification.message}
+            isError={notification.isError}
           />
-          <Route
-            path="/blogs"
-            element={
-              <div>
-                <Togglable buttonLabel="new blog" ref={blogFormRef}>
-                  <BlogForm createBlog={addBlog} />
-                </Togglable>
-                <h3>Blogs</h3>
-                {blogs.map((blog) => (
-                  <Blog key={blog.id} blog={blog} user={user} />
-                ))}
-              </div>
-            }
-          />
-          <Route path="/users" element={<Users />} />
-          <Route path="/users/:id" element={<UserView />} />
-        </Routes>
-      </div>
-    </Router>
+          <Navigation user={user} handleLogout={handleLogout} />
+          <Routes>
+            <Route path="/" element={<Navigate replace to="/blogs" />} />
+            <Route
+              path="/blogs"
+              element={
+                <div>
+                  <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                    <BlogForm createBlog={addBlog} />
+                  </Togglable>
+                  <h3>Blogs</h3>
+                  {blogs.map((blog) => (
+                    <Blog key={blog.id} blog={blog} user={user} />
+                  ))}
+                </div>
+              }
+            />
+            <Route path="/blogs/:id" element={<BlogView />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<UserView />} />
+          </Routes>
+        </div>
+      </Router>
+    </div>
   );
 };
 

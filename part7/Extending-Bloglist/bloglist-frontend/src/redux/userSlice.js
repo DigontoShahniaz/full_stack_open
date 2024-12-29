@@ -18,9 +18,7 @@ export const initializeUsers = () => async (dispatch) => {
   dispatch(setUsers(users));
 };
 
-// Add a selector for fetching a user by ID
-export const selectUserById = (state, userId) => 
-  state.users.find(user => user.id === userId);
-
+export const selectUserById = (state, userId) =>
+  state.users.find((user) => user.id === userId);
 
 export default userSlice.reducer;

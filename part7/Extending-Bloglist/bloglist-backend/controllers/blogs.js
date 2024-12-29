@@ -34,6 +34,34 @@ router.post("/", userExtractor, async (request, response) => {
   response.status(201).json(savedBlog);
 });
 
+router.post("/:id/comments", async (request, response) => {
+  const { content } = request.body;
+
+  if (!content || content.trim() === "") {
+    return response.status(400).json({ error: "content missing" });
+  }
+
+  try {
+    const blog = await Blog.findById(request.params.id);
+
+    if (!blog) {
+      return response.status(404).json({ error: "blog not found" });
+    }
+
+    const comment = {
+      content,
+      date: new Date(),
+    };
+
+    blog.comments = blog.comments.concat(comment);
+    const updatedBlog = await blog.save();
+    response.status(201).json(updatedBlog);
+  } catch (error) {
+    console.error("Error adding comment:", error.message);
+    response.status(500).json({ error: "server error" });
+  }
+});
+
 router.delete("/:id", userExtractor, async (request, response) => {
   const user = request.user;
 
