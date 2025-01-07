@@ -1,5 +1,5 @@
-import { Form, Button } from "react-bootstrap";
-import PropTypes from "prop-types";
+import { Form, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const LoginForm = ({
   handleSubmit,
